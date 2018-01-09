@@ -4,9 +4,6 @@ const request = require('request');
 
 const config = require('../config.js').getConfig();
 
-// Import API.AI and identify with token
-const apiai = require('apiai');
-const apiAiClient = apiai(config.apiaitoken);
 const FACEBOOK_ACCESS_TOKEN = config.facebook.pageAccessToken;
 
 
@@ -22,21 +19,13 @@ const sendTextMessage = (senderId, text) => {
     });
 };
 
-module.exports = (event) => {
+module.exports = (event, message ) => {
     const senderId = event.sender.id;
-    const message = event.message.text;
 
-    const apiaiSession = apiAiClient.textRequest(message, {sessionId: 'botcube_co'});
-
-    apiaiSession.on('response', (response) => {
-        const result = response.result.fulfillment.speech;
-        console.log("this is a response",response.result.parameters);
-        sendTextMessage(senderId, result);
+        sendTextMessage(senderId, message);
             
                       
         
-    });
 
-    apiaiSession.on('error', error => console.log(error));
-    apiaiSession.end();
+
 };
